@@ -1,15 +1,42 @@
-import React from 'react'
+import React, { Component }  from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Note from '../Note/Note'
 import CircleButton from '../CircleButton/CircleButton'
+import UserContext from '../App/UserContext'
 import './NoteListMain.css'
+import { getNotesForFolder } from '../notes-helpers'
 
-export default function NoteListMain(props) {
+export default class NoteListMain extends Component {
+
+
+  //      const {folderId} = routeProps.match.params;
+  //     const notesForFolder = getNotesForFolder(
+  //         notes,
+  //         folderId
+  //     );
+      // return (
+      //     <NoteListMain
+      //         {...routeProps}
+      //         notes={notesForFolder}
+      //     />
+      // );
+  static defaultProps = {
+    match: {
+      params: {}
+    }
+  }
+
+  static contextType = UserContext;
+
+  render() {
+    const { folderId } = this.props.match.params;
+    const { notes } = this.context;
+    const notesForFolder = getNotesForFolder(notes, folderId);
   return (
     <section className='NoteListMain'>
       <ul>
-        {props.notes.map(note =>
+        {notesForFolder.map(note =>
           <li key={note.id}>
             <Note
               id={note.id}
@@ -32,9 +59,5 @@ export default function NoteListMain(props) {
         </CircleButton>
       </div>
     </section>
-  )
-}
-
-NoteListMain.defaultProps = {
-  notes: [],
+  )}
 }
